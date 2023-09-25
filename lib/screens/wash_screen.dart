@@ -1,16 +1,13 @@
 import 'dart:async';
-import 'dart:convert';
-import 'dart:js_util';
-
 import 'package:esp8266_with_firebase/screens/put_select_screen.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import '../config/globalStaticVariable.dart';
-import '../model/weight.dart';
 
 class WashScreen extends StatefulWidget {
   const WashScreen({super.key});
+
+  static const routeName = '/wash_screen';
 
   @override
   State<WashScreen> createState() => _WashScreenState();
@@ -41,7 +38,12 @@ class _WashScreenState extends State<WashScreen> {
       return Column(
         children: [
           Text("세척이 완료되었습니다! 다음 단계를 진행해주세요."),
-          TextButton(onPressed: (){}, child: Text("다음으로"))
+          TextButton(onPressed: (){
+            Navigator.pushNamed(
+              context,
+              PutScreen.routeName,
+            );
+          }, child: Text("다음으로"))
         ],
       );
     } else {

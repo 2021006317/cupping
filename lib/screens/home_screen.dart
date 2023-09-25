@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
+  static const routeName = '/home_screen';
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -15,7 +17,7 @@ class HomeScreen extends StatelessWidget {
               Navigator.pushAndRemoveUntil(
                   context,
                   MaterialPageRoute(builder: (context) => const WashScreen(),), (route) => false);
-            }, child: Text(
+            }, child: const Text(
               "시작하기"
             ))
           ],
