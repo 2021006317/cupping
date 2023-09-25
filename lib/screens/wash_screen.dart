@@ -2,12 +2,12 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:js_util';
 
-import 'package:esp8266_with_firebase/put_select_screen.dart';
+import 'package:esp8266_with_firebase/screens/put_select_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import './config/globalStaticVariable.dart';
-import 'model/weight.dart';
+import '../config/globalStaticVariable.dart';
+import '../model/weight.dart';
 
 class WashScreen extends StatefulWidget {
   const WashScreen({super.key});

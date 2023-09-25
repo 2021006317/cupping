@@ -1,5 +1,5 @@
 import 'package:esp8266_with_firebase/config/palette.dart';
-import 'package:esp8266_with_firebase/wash_screen.dart';
+import 'package:esp8266_with_firebase/screens/wash_screen.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatelessWidget {
