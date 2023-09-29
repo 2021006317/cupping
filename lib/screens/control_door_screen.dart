@@ -1,7 +1,12 @@
+import 'dart:html';
+
+import 'package:esp8266_with_firebase/screens/end_screen.dart';
 import 'package:esp8266_with_firebase/screens/home_screen.dart';
-import 'package:esp8266_with_firebase/screens/point_screen.dart';
+import 'package:esp8266_with_firebase/screens/point_get_screen.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+
+import '../Template/customTextStyle.dart';
 
 class ControlDoorScreen extends StatefulWidget {
   const ControlDoorScreen({super.key});
@@ -12,8 +17,8 @@ class ControlDoorScreen extends StatefulWidget {
   State<ControlDoorScreen> createState() => _ControlDoorScreenState();
 }
 
-enum Char { Y, N }
 class _ControlDoorScreenState extends State<ControlDoorScreen> {
+
   Future<void> updateMovement(String movement) async {
     DatabaseReference weightRef = FirebaseDatabase.instance.ref("movement");
     await weightRef.update({
@@ -21,54 +26,25 @@ class _ControlDoorScreenState extends State<ControlDoorScreen> {
     });
   }
 
-  void routing(){
-    Navigator.pushNamed(
-        context,
-        PointScreen.routeName
-    );
+  void routing(int index){
+    List<String> routeName = [PointScreen.routeName, EndScreen.routeName];
+    Navigator.pushNamed( context, routeName[index] );
   }
 
   @override
   Widget build(BuildContext context) {
-    Char _char = Char.N;
-    final args = ModalRoute.of(context)!.settings.arguments as String;
-    updateMovement(args);
+    updateMovement("open");
     return StreamBuilder(
       stream: FirebaseDatabase.instance.ref("movement").onChildChanged,
       builder: (context, AsyncSnapshot<DatabaseEvent> eventSnapshot){
-        if (eventSnapshot.connectionState == ConnectionState.waiting){
-          return const CircularProgressIndicator();
-        }
         List<Widget> children;
-        if(eventSnapshot.hasData){
-          String? key = eventSnapshot.data!.snapshot.key;
-          String movement = eventSnapshot.data!.snapshot.value as String; // close 여야 함.
-          if (key != "move"){
-            children = [Text('Error: ${eventSnapshot.error}')];
-          }
-          else {
-            if(movement=="close"){
-              updateMovement(movement);
-              children = <Widget>[
-                const Text("회수가 완료되었습니다. 적립하시겠습니까?"),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    TextButton(onPressed: (){
-                      routing();
-                    }, child: Text("Y")),
-                    TextButton(onPressed: (){
-                      routing();
-                    }, child: Text("N")),
-                  ],
-                )
-              ];
-            } else if (movement=="open"){
-              children = [const CircularProgressIndicator()];
-            } else {
-              children = [Text('Error: ${eventSnapshot.error}')];
-            }
-          }
+        if(eventSnapshot.hasData) {
+          String move = eventSnapshot.data!.snapshot.value as String;
+          updateMovement(move);
+          children = [
+            movementStateWidget(move),
+            askStampWidget()
+          ];
         } else if (eventSnapshot.hasError){
           children = <Widget>[
             const Icon(
@@ -82,15 +58,54 @@ class _ControlDoorScreenState extends State<ControlDoorScreen> {
             ),
           ];
         } else {
-          children = [SizedBox()];
+          children = [
+            Text(
+                '컵 리드(뚜껑), 컵홀더는 모두 왼쪽의 일반쓰레기통에 버려주세요.',
+                style: CustomTextStyle.mainStyle
+            )
+          ];
         }
-        return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: children,
+        return Scaffold(
+            body: Container(
+              alignment: Alignment.center,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: children,
+              ),
             )
         );
       },
+    );
+  }
+
+  Widget movementStateWidget(String move) {
+    if (move == "open") {
+      return Text(
+          "뚜껑, 컵홀더 등을 모두 분리 후 컵을 올바른 방향으로 넣어주세요.",
+          style: CustomTextStyle.mainStyle
+      );
+    } else {
+      return Text(
+          "반납이 완료되었습니다. 스탬프를 적립하시겠습니까?",
+          style: CustomTextStyle.mainStyle
+      );
+    }
+  }
+
+  Widget askStampWidget() {
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 40),
+      child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            TextButton(
+                onPressed: (){routing(0);},
+                child: Text("Y(적립화면으로 이동)", style: CustomTextStyle.buttonStyle)),
+            TextButton(
+                onPressed: (){routing(1);},
+                child: Text("N(홈화면으로 이동)", style: CustomTextStyle.buttonStyle)),
+          ],
+      ),
     );
   }
 }

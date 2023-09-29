@@ -2,6 +2,9 @@ import 'package:esp8266_with_firebase/config/palette.dart';
 import 'package:esp8266_with_firebase/screens/wash_screen.dart';
 import 'package:flutter/material.dart';
 
+import '../Template/customText.dart';
+import '../Template/customTextStyle.dart';
+
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
@@ -9,19 +12,40 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        child: Column(
-          children: [
-            const Text("환영합니다"),
-            TextButton(onPressed: (){
-              Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(builder: (context) => const WashScreen(),), (route) => false);
-            }, child: const Text(
-              "시작하기"
-            ))
+    return Scaffold(
+      body: Container(
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.3),
+              spreadRadius: 1,
+              blurRadius: 1,
+              offset: Offset(0, 1),
+            ),
           ],
         ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Text(
+                  CustomText.home,
+                  style: CustomTextStyle.mainStyle
+              ),
+              TextButton(
+                  onPressed: (){
+                    Navigator.of(context).pushNamed(WashScreen.routeName);
+                    },
+                  child: Text(
+                      "시작하기",
+                      style: CustomTextStyle.buttonStyle
+                  )
+              )
+            ],
+          ),
+      ),
     );
   }
 }

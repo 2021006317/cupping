@@ -2,6 +2,8 @@ import 'dart:async';
 import 'package:esp8266_with_firebase/screens/put_select_screen.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import '../Template/customText.dart';
+import '../Template/customTextStyle.dart';
 import '../config/globalStaticVariable.dart';
 
 class WashScreen extends StatefulWidget {
@@ -28,26 +30,27 @@ class _WashScreenState extends State<WashScreen> {
     });
   }
 
-  @override
-  void initState(){
-    super.initState();
-  }
-
   Widget validResult(){
     if (_isWeightValid){
       return Column(
         children: [
-          Text("세척이 완료되었습니다! 다음 단계를 진행해주세요."),
-          TextButton(onPressed: (){
-            Navigator.pushNamed(
-              context,
-              PutScreen.routeName,
-            );
-          }, child: Text("다음으로"))
+          Text(
+              CustomText.washValid,
+              style : CustomTextStyle.mainStyle
+          ),
+          TextButton(
+              onPressed: (){
+                Navigator.of(context).pushNamed(PutScreen.routeName);
+                },
+              child: Text("다음으로", style: CustomTextStyle.buttonStyle)
+          )
         ],
       );
     } else {
-      return Text("세척이 마무리되지 않았습니다. 더 깨끗하게 세척해주세요.");
+      return Text(
+          CustomText.washInvalid,
+          style : CustomTextStyle.mainStyle
+      );
     }
   }
 
@@ -56,9 +59,6 @@ class _WashScreenState extends State<WashScreen> {
     return StreamBuilder(
         stream: FirebaseDatabase.instance.ref("weight").onChildChanged,
         builder: (context, AsyncSnapshot<DatabaseEvent> eventSnapshot){
-          if (eventSnapshot.connectionState == ConnectionState.waiting){
-            return const CircularProgressIndicator();
-          }
           List<Widget> children;
           if(eventSnapshot.hasData){
             String? key = eventSnapshot.data!.snapshot.key;
@@ -82,23 +82,26 @@ class _WashScreenState extends State<WashScreen> {
                     ),
                   ];
                 } else {
-                  children = const <Widget>[
-                    SizedBox(
-                      width: 60,
-                      height: 60,
-                      child: CircularProgressIndicator(),
-                    ),
+                  children = <Widget>[
                     Padding(
                       padding: EdgeInsets.only(top: 16),
-                      child: Text('Awaiting result...'),
+                      child: Text(
+                          CustomText.washInfo,
+                          style: CustomTextStyle.mainStyle
+                      ),
+                    ),
+                    SizedBox(
+                      child: Image.asset('assets/images/mongmong.png'),
                     ),
                   ];
                 }
-                return Center(
-                    child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: children,
-                  )
+                return Scaffold(
+                  body: Center(
+                      child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: children,
+                    )
+                  ),
                 );
         });
   }
