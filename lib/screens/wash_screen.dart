@@ -84,7 +84,7 @@ class _WashScreenState extends State<WashScreen> {
                 } else {
                   children = <Widget>[
                     Padding(
-                      padding: EdgeInsets.only(top: 16),
+                      padding: const EdgeInsets.only(top: 16),
                       child: Text(
                           CustomText.washInfo,
                           style: CustomTextStyle.mainStyle

@@ -33,22 +33,23 @@ class _PointViewScreenState extends State<PointViewScreen> {
   Widget build(BuildContext context) {
     final userStamp = ModalRoute.of(context)!.settings.arguments as int;
     return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-       crossAxisAlignment: CrossAxisAlignment.center,
-       children: [
-         Text(
-         "적립이 완료되었습니다. 이용해주셔서 감사합니다.",
-         style: CustomTextStyle.mainStyle,),
-         Text(
-          "현재 스탬프 개수: $userStamp개",
-           style: CustomTextStyle.buttonStyle,
-         ),
-         Text(
-           "$count_left초 후 홈화면으로 돌아갑니다.",
-           style: CustomTextStyle.mainStyle
-         ),
-       ]
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                "적립이 완료되었습니다. 이용해주셔서 감사합니다.",
+                style: CustomTextStyle.mainStyle,),
+              Text(
+                "현재 스탬프 개수: $userStamp개",
+                style: CustomTextStyle.buttonStyle,
+              ),
+              Text(
+                  "$count_left초 후 홈화면으로 돌아갑니다.",
+                  style: CustomTextStyle.mainStyle
+              ),
+            ]
+        )
       ),
     );
   }

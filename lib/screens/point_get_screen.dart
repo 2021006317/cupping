@@ -1,7 +1,4 @@
-import 'dart:js_interop';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:esp8266_with_firebase/screens/home_screen.dart';
 import 'package:esp8266_with_firebase/screens/point_view_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -20,35 +17,34 @@ class PointScreen extends StatefulWidget {
 class _PointScreenState extends State<PointScreen> {
 
   final TextEditingController _phoneNumberController = TextEditingController();
+  final maxStamp = 12;
   var _userEnterMessage='';
   bool _isButtonEnabled=false;
 
   void _rewarded(int phoneNumber) async{
     final userCollection = FirebaseFirestore.instance.collection("user");
-    int userStamp = 1;
     if ('$phoneNumber'.length==10){
       _isButtonEnabled = true;
       DocumentSnapshot snapshot = await userCollection.doc('$phoneNumber').get();
-      if (snapshot.exists){
-        final userDoc = userCollection.doc('$phoneNumber');
-        userStamp = 1 + (snapshot['stamp'] as int);
-        userDoc.update({
-          'stamp' : userStamp
-        });
-      } else {
+      if (!snapshot.exists) { // 새로운 사용자
         userCollection.doc('$phoneNumber').set(
-          {
-            'phoneNumber' : phoneNumber,
-            'created_at' : Timestamp.now(),
-            'stamp' : userStamp
-          }
+            {
+              'phoneNumber': phoneNumber,
+              'created_at': Timestamp.now(),
+              'stamp': 1
+            }
         );
+      } else{ // 기존 사용자
+        if((1+snapshot['stamp'])==maxStamp){
+          getNewCoupon(userCollection.doc('$phoneNumber'));
+        }
+        addStamp(userCollection.doc('$phoneNumber'));
       }
       _userEnterMessage = '';
       _isButtonEnabled = false;
       Navigator.of(context).pushNamed(
-          PointViewScreen.routeName,
-          arguments: userStamp); // number도 같이 넘겨주고 싶음.
+          PointViewScreen.routeName, 
+          arguments: await userCollection.doc('$phoneNumber').get().then((value) => value['stamp'] as int));
     }
   }
   
@@ -82,6 +78,7 @@ class _PointScreenState extends State<PointScreen> {
                         onChanged: (value){
                           setState(() {
                             _userEnterMessage = value;
+                            if(value.length==11) _isButtonEnabled = true;
                           });
                         },
                         textAlignVertical: TextAlignVertical.center,
@@ -124,11 +121,28 @@ class _PointScreenState extends State<PointScreen> {
                       ),
                     ),
                     Container(
-                      margin: EdgeInsets.symmetric(horizontal: 20),
+                      margin: const EdgeInsets.symmetric(horizontal: 20),
                       child: TextButton(
                           onPressed: () {
                             if (_isButtonEnabled) {
                               _rewarded(int.parse(_userEnterMessage));
+                            } else {
+                              showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: const Text('전화번호 값이 유효하지 않습니다.'),
+                                      content: Text('${_isButtonEnabled} : 다시 입력해주세요.'),
+                                      actions: <Widget>[
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                          child: const Text('확인'),
+                                        ),
+                                      ],
+                                    );
+                                  });
                             }
                           },
                           child: Text('완료', style: CustomTextStyle.buttonStyle)
@@ -140,6 +154,34 @@ class _PointScreenState extends State<PointScreen> {
       ),
           ),
         ),
+    );
+  }
+
+  void getNewCoupon(DocumentReference userDoc){
+    userDoc.collection("coupons").add({
+      'expired_at' : Timestamp.fromDate(DateTime.now().add(const Duration(days: 30))),
+      'content' : '스탬프 $maxStamp개 적립 기프티콘 교환권'
+    });
+    userDoc.collection("alarms").add({
+      'created_at' : Timestamp.now(),
+      'title' : '새 쿠폰 적립 알림',
+      'content' : '새로운 쿠폰이 적립되었습니다! 쿠폰함을 확인해주세요.'
+    });
+    userDoc.update({
+      'stamp' : 0
+    });
+  }
+
+  void addStamp(DocumentReference userDoc){
+    userDoc.update({
+      'stamp' : FieldValue.increment(1)
+    });
+    userDoc.collection("history").add(
+        {
+          'created_at' : Timestamp.now(),
+          'title' : '스탬프 적립',
+          'content' : '스탬프 1개가 적립되었습니다.'
+        }
     );
   }
 }

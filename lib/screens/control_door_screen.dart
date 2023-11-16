@@ -1,5 +1,3 @@
-import 'dart:html';
-
 import 'package:esp8266_with_firebase/screens/end_screen.dart';
 import 'package:esp8266_with_firebase/screens/home_screen.dart';
 import 'package:esp8266_with_firebase/screens/point_get_screen.dart';
@@ -94,7 +92,7 @@ class _ControlDoorScreenState extends State<ControlDoorScreen> {
 
   Widget askStampWidget() {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 40),
+      margin: const EdgeInsets.symmetric(horizontal: 40),
       child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
