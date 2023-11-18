@@ -17,17 +17,17 @@ class PointScreen extends StatefulWidget {
 class _PointScreenState extends State<PointScreen> {
 
   final TextEditingController _phoneNumberController = TextEditingController();
-  final maxStamp = 12;
+  final maxStamp = 6;
   var _userEnterMessage='';
   bool _isButtonEnabled=false;
 
-  void _rewarded(int phoneNumber) async{
+  void _rewarded(String phoneNumber) async{
     final userCollection = FirebaseFirestore.instance.collection("user");
-    if ('$phoneNumber'.length==10){
+    if (phoneNumber.length==11){
       _isButtonEnabled = true;
-      DocumentSnapshot snapshot = await userCollection.doc('$phoneNumber').get();
+      DocumentSnapshot snapshot = await userCollection.doc(phoneNumber).get();
       if (!snapshot.exists) { // 새로운 사용자
-        userCollection.doc('$phoneNumber').set(
+        userCollection.doc(phoneNumber).set(
             {
               'phoneNumber': phoneNumber,
               'created_at': Timestamp.now(),
@@ -35,16 +35,16 @@ class _PointScreenState extends State<PointScreen> {
             }
         );
       } else{ // 기존 사용자
+        addStamp(userCollection.doc(phoneNumber));
         if((1+snapshot['stamp'])==maxStamp){
-          getNewCoupon(userCollection.doc('$phoneNumber'));
+          getNewCoupon(userCollection.doc(phoneNumber));
         }
-        addStamp(userCollection.doc('$phoneNumber'));
       }
       _userEnterMessage = '';
       _isButtonEnabled = false;
       Navigator.of(context).pushNamed(
           PointViewScreen.routeName, 
-          arguments: await userCollection.doc('$phoneNumber').get().then((value) => value['stamp'] as int));
+          arguments: await userCollection.doc(phoneNumber).get().then((value) => value['stamp'] as int));
     }
   }
   
@@ -125,7 +125,7 @@ class _PointScreenState extends State<PointScreen> {
                       child: TextButton(
                           onPressed: () {
                             if (_isButtonEnabled) {
-                              _rewarded(int.parse(_userEnterMessage));
+                              _rewarded(_userEnterMessage);
                             } else {
                               showDialog(
                                   context: context,
