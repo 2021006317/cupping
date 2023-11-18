@@ -1,15 +1,15 @@
-import 'package:esp8266_with_firebase/screens/control_door_screen.dart';
+import 'package:esp8266_with_firebase/screens/plzThrowIntoTrashcan.dart';
 import 'package:esp8266_with_firebase/screens/end_screen.dart';
-import 'package:esp8266_with_firebase/screens/point_get_screen.dart';
-import 'package:esp8266_with_firebase/screens/point_view_screen.dart';
-import 'package:esp8266_with_firebase/screens/put_select_screen.dart';
-import 'package:esp8266_with_firebase/screens/wash_screen.dart';
+import 'package:esp8266_with_firebase/screens/inputPhoneNumberScreen.dart';
+import 'package:esp8266_with_firebase/screens/EndOfGetStampThanks.dart';
+import 'package:esp8266_with_firebase/screens/SelectCup.dart';
+import 'package:esp8266_with_firebase/screens/PutAfterWashValidOrInvalid.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'firebase_options.dart';
-import 'screens/home_screen.dart';
+import 'screens/HomeScreen.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
@@ -34,11 +34,11 @@ class MyApp extends StatelessWidget {
 
     final routes = {
       HomeScreen.routeName: (context) => const HomeScreen(),
-      WashScreen.routeName: (context) => const WashScreen(),
-      PutScreen.routeName: (context) => const PutScreen(),
-      ControlDoorScreen.routeName: (context) => const ControlDoorScreen(),
-      PointScreen.routeName: (context) => const PointScreen(),
-      PointViewScreen.routeName: (context) => const PointViewScreen(),
+      PutAfterWashValidOrInvalid.routeName: (context) => const PutAfterWashValidOrInvalid(),
+      SelectCup.routeName: (context) => const SelectCup(),
+      plzThrowIntoTrashCan.routeName: (context) => const plzThrowIntoTrashCan(),
+      inputPhoneNumberScreen.routeName: (context) => const inputPhoneNumberScreen(),
+      EndOfGetStampThanks.routeName: (context) => const EndOfGetStampThanks(),
       EndScreen.routeName: (context) => const EndScreen()
     };
 

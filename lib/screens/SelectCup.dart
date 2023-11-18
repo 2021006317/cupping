@@ -1,19 +1,19 @@
-import 'package:esp8266_with_firebase/screens/control_door_screen.dart';
+import 'package:esp8266_with_firebase/screens/plzThrowIntoTrashcan.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
 import '../Template/customTextStyle.dart';
 
-class PutScreen extends StatefulWidget {
-  const PutScreen({super.key});
+class SelectCup extends StatefulWidget {
+  const SelectCup({super.key});
 
-  static const routeName = '/PutScreen';
+  static const routeName = '/SelectCup';
   @override
-  State<PutScreen> createState() => _PutScreenState();
+  State<SelectCup> createState() => _SelectCupState();
 }
 
 // 종이인지 플라스틱인지 고르게 한다.
-class _PutScreenState extends State<PutScreen> {
+class _SelectCupState extends State<SelectCup> {
 
   /* Cup 종류 */
   Widget cupProfileButton({required int index}){
@@ -37,7 +37,7 @@ class _PutScreenState extends State<PutScreen> {
       });
       Navigator.pushNamed(
           context,
-          ControlDoorScreen.routeName
+          plzThrowIntoTrashCan.routeName
       );
     }
 
@@ -61,21 +61,25 @@ class _PutScreenState extends State<PutScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          Text(
-              "반납할 컵의 종류를 선택해주세요.",
-              style: CustomTextStyle.mainStyle
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              cupProfileButton(index: 0),
-              cupProfileButton(index: 1)
-            ],
-          ),
-        ],
+      body: Container(
+        padding: const EdgeInsets.all(10.0),
+        margin: const EdgeInsets.all(10.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            Text(
+                "반납할 컵의 종류를 선택해주세요.",
+                style: CustomTextStyle.mainStyle
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                cupProfileButton(index: 0),
+                cupProfileButton(index: 1)
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
