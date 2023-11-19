@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import '../Template/customTextStyle.dart';
@@ -25,12 +26,14 @@ class _EndScreenState extends State<EndScreen> {
         count_left -=1;
       });
       if (count_left == 0){
+        timer.cancel();
         Navigator.pushNamed(context, HomeScreen.routeName);
       }
     });
   }
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       body: Container(
         padding: const EdgeInsets.all(10.0),
@@ -44,4 +47,6 @@ class _EndScreenState extends State<EndScreen> {
       )
     );
   }
+
+
 }

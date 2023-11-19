@@ -1,9 +1,11 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:esp8266_with_firebase/screens/HomeScreen.dart';
 import 'package:flutter/material.dart';
 
 import '../Template/customTextStyle.dart';
+import '../config/globalStaticVariable.dart';
 
 class EndOfGetStampThanks extends StatefulWidget {
   const EndOfGetStampThanks({super.key});
@@ -24,14 +26,22 @@ class _EndOfGetStampThanksState extends State<EndOfGetStampThanks> {
         count_left -=1;
       });
       if (count_left == 0){
-        Navigator.pushNamed(context, HomeScreen.routeName);
+        timer.cancel();
+        Navigator.pushNamedAndRemoveUntil(context, HomeScreen.routeName, (route) => false);
       }
     });
   }
 
   @override
+  void dispose(){
+    super.dispose();
+    count_left=0;
+  }
+
+  @override
   Widget build(BuildContext context) {
     final userStamp = ModalRoute.of(context)!.settings.arguments as int;
+
     return Scaffold(
       body: Container(
         padding: const EdgeInsets.all(10.0),

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:esp8266_with_firebase/screens/end_screen.dart';
 import 'package:esp8266_with_firebase/screens/HomeScreen.dart';
 import 'package:esp8266_with_firebase/screens/inputPhoneNumberScreen.dart';
@@ -23,6 +24,7 @@ class _plzThrowIntoTrashCanState extends State<plzThrowIntoTrashCan> {
       "move" : movement
     });
   }
+
 
   void routing(int index){
     List<String> routeName = [inputPhoneNumberScreen.routeName, EndScreen.routeName];
@@ -84,6 +86,15 @@ class _plzThrowIntoTrashCanState extends State<plzThrowIntoTrashCan> {
           style: CustomTextStyle.mainStyle
       );
     } else {
+      Future<void> addHistoryCount() async {
+        String today = DateTime.now().toString().substring(0,10);
+        DocumentSnapshot snapshot = await FirebaseFirestore.instance.collection("history").doc(today).get();
+        int count = (snapshot.exists) ? snapshot['count'] : 0;
+        await FirebaseFirestore.instance.collection("history").doc(today).update({"count": count+1});
+      }
+
+      addHistoryCount();
+
       return Text(
           "반납이 완료되었습니다. 스탬프를 적립하시겠습니까?",
           style: CustomTextStyle.mainStyle
@@ -92,6 +103,7 @@ class _plzThrowIntoTrashCanState extends State<plzThrowIntoTrashCan> {
   }
 
   Widget askStampWidget() {
+
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 40),
       child: Row(

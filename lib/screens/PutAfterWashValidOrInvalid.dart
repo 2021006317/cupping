@@ -20,7 +20,7 @@ class _PutAfterWashValidOrInvalidState extends State<PutAfterWashValidOrInvalid>
 
   Future<void> updateWeightValid(double weightValue) async {
     DatabaseReference weightRef = FirebaseDatabase.instance.ref("weight");
-    if (weightValue <= GlobalStaticVariable.WEIGHT_VALID_STANDARD){
+    if (weightValue <= GlobalStatic.WEIGHT_VALID_STANDARD){
       _isWeightValid = true;
     } else {
       _isWeightValid = false;
