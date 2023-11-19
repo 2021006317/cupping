@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 class ProgressBar extends StatefulWidget implements PreferredSizeWidget{
   final AppBar appBar;
   String? subTitle;
-  ProgressBar({Key? key, required this.appBar, String? subTitle = 'cupping'}): this.subTitle = subTitle, super(key:key);
+  ProgressBar({Key? key, required this.appBar, this.subTitle = 'cupping'}): super(key:key);
 
   @override
   State<ProgressBar> createState() => _ProgressBarState();
 
   @override
-  Size get preferredSize => new Size.fromHeight(appBar.preferredSize.height);
+  Size get preferredSize => Size.fromHeight(appBar.preferredSize.height);
 }
 
 class _ProgressBarState extends State<ProgressBar> {
