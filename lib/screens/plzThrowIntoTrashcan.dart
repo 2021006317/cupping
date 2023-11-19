@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:esp8266_with_firebase/screens/end_screen.dart';
-import 'package:esp8266_with_firebase/screens/HomeScreen.dart';
 import 'package:esp8266_with_firebase/screens/inputPhoneNumberScreen.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';

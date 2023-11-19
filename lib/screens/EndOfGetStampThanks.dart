@@ -1,11 +1,9 @@
 import 'dart:async';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:esp8266_with_firebase/screens/HomeScreen.dart';
 import 'package:flutter/material.dart';
 
 import '../Template/customTextStyle.dart';
-import '../config/globalStaticVariable.dart';
 
 class EndOfGetStampThanks extends StatefulWidget {
   const EndOfGetStampThanks({super.key});
